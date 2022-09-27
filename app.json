@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "App",
-    "slug": "App",
+    "owner": "giofenna",
+    "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,10 +25,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.giofenna.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "28951fcc-754f-4a6f-a0e3-18dc7a15af1e"
+      }
     }
   }
 }
