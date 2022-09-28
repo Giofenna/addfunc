@@ -17,6 +17,10 @@ router.get("/", function (req, res) {
   res.send({ message: "send" });
 });
 
+router.post("/signup", function (req, res) {
+  console.log(req);
+});
+
 router.post("/login", function (req, res) {
   console.log(req.body);
   const qry = "SELECT * FROM gebruikers WHERE email =?";
@@ -26,17 +30,16 @@ router.post("/login", function (req, res) {
       res.status(400).json({ message: err.message });
     } else if (rows.length == 0) {
       res.status(404).json({ message: "gebruiker niet gevonden" });
-    } else if (rows[0].wachtwoord != req.body.wachtwoord) {
+    } else if (rows[0].password != req.body.password) {
       res.send({ message: "onjuist wachtwoord" });
     } else {
-      console.log(rows[0].wachtwoord);
-      console.log(
-        jwt.sign(
-          { gebruiker_id: rows[0].gebruiker_id, email: rows[0].email },
-          process.env.SECRET
-        )
+      const token = jwt.sign(
+        { gebruiker_id: rows[0].gebruiker_id, email: rows[0].email },
+        process.env.SECRET
       );
-      res.send(rows);
+      console.log(token);
+      console.log(rows[0].name);
+      res.status(200).send({ token: token, name: rows[0].name });
     }
   });
 });

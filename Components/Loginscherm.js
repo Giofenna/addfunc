@@ -15,23 +15,26 @@ import axios from "axios";
 
 export default function Loginscherm({ navigation }) {
   var number;
-  const [api, Setapi] = useState("");
-  const test = () => {
-    useEffect(() => {
-      axios
-        .post("http://192.168.190.101:8080/login", {
-          email: "email",
-          wachtwoord: "wachtwoord",
-        })
-        .then(function (response) {
-          console.log(response.data);
-        });
-    }, []);
+
+  const logIn = async () => {
+    try {
+      const response = await axios.post("http://192.168.190.101:8080/login", {
+        email: email,
+        password: wachtwoord,
+      });
+      console.log(response.data);
+      await Securestore.setItemAsync("token", response.data.token);
+      await Securestore.setItemAsync("name", response.data.name);
+      navigation.navigate("Ingelogdscherm");
+    } catch (err) {
+      console.log(err);
+      console.log({
+        status: err.response.status,
+        message: err.response.data.message,
+      });
+    }
   };
 
-  //   fetch("https://api.coingecko.com/api/v3/ping")
-  //     .then((res) => res.json())
-  //     .then((res) => console.log(res));
   const width = Dimensions.get("screen").width;
   const height = Dimensions.get("screen").height;
   const [email, Setemail] = useState("");
@@ -110,7 +113,7 @@ export default function Loginscherm({ navigation }) {
       <Pressable onPress={Keyboard.dismiss}>
         <Pressable
           onPress={async () =>
-            console.log(await Securestore.getItemAsync("key"))
+            console.log(await Securestore.getItemAsync("token"))
           }
         >
           <Image
@@ -125,7 +128,7 @@ export default function Loginscherm({ navigation }) {
         ></Image>
         <Text style={styles.Textboxtext}>Email</Text>
         <TextInput
-          onChangeText={(e) => Setemail(e)}
+          onChangeText={(e) => Setemail(e.toLowerCase())}
           style={styles.Textinput}
         ></TextInput>
         <Text style={styles.Textboxtext}>Password</Text>
@@ -134,7 +137,7 @@ export default function Loginscherm({ navigation }) {
           style={styles.Textinput}
         ></TextInput>
         <TouchableOpacity
-          onPress={() => useEffect(() => console.log("test"), [])}
+          onPress={() => logIn()}
           style={styles.TouchableOpacity}
         >
           <Text style={styles.Buttontext}>Login</Text>
