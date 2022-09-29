@@ -11,7 +11,21 @@ let db = new sqlite3.Database("./database/database.db", (err) => {
     console.log(`Auth connected to the SQlite database "webshop".`);
   }
 });
-
+router.get("/quote", function (req, res) {
+  const quote_id = Math.round(Math.random() * 1547);
+  db.all(
+    `SELECT quote, author FROM "wellnessquotes" WHERE quote_id = ?`,
+    quote_id,
+    function (err, rows) {
+      console.log(rows);
+      if (err) {
+        console.log(err);
+      }
+      console.log(rows);
+      res.status(200).send(rows);
+    }
+  );
+});
 router.get("/", function (req, res) {
   console.log(req.body);
   res.send({ message: "send" });
